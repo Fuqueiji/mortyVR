@@ -24,6 +24,7 @@ public class Tamanho : MonoBehaviour {
     private Vector3 move;
     public SteamVR_Action_Boolean grabGrip;
     public SteamVR_Input_Sources rightInput = SteamVR_Input_Sources.RightHand;
+    public GameObject Espaco;
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class Tamanho : MonoBehaviour {
     private void Start(){
         controller = gameObject.GetComponent<CharacterController>();
         actionSet.Activate(hand);
+        Espaco = GameObject.FindGameObjectWithTag("Espaco");
     }
 
     private void OnPointerClick(object sender, PointerEventArgs e)
@@ -58,6 +60,11 @@ public class Tamanho : MonoBehaviour {
             else if(portalCount == 1){
                Instantiate(Portal2, e.hit.point+ new Vector3(0, 1.2f, 0), steamVrLaserPointer.pointer.transform.rotation * Quaternion.Euler(90 , 0, 0));
                 portalCount++;
+            }
+            else if(portalCount == 2){
+                Destroy(GameObject.FindGameObjectWithTag("portal1"));
+                Destroy(GameObject.FindGameObjectWithTag("portal2"));
+                portalCount = 0;
             }
         }
         else if(weaponMode == 1){ //1 == shrink
@@ -101,15 +108,27 @@ public class Tamanho : MonoBehaviour {
         // move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         m = moveAction[hand].axis;
         if (SteamVR_Actions.default_GrabGrip.GetStateDown(rightInput)){
+            gameObject.GetComponent<AudioSource>().Play();
             if(weaponMode==2){
-                weaponMode=0;
+                weaponMode=-1;
             }
             weaponMode++;
+            if(weaponMode == 0){
+                GameObject.FindGameObjectWithTag("modo2").GetComponent<Renderer>().enabled = false;
+                GameObject.FindGameObjectWithTag("modo0").GetComponent<Renderer>().enabled = true;
+            }
+            else if(weaponMode == 1){
+                GameObject.FindGameObjectWithTag("modo0").GetComponent<Renderer>().enabled = false;
+                GameObject.FindGameObjectWithTag("modo1").GetComponent<Renderer>().enabled = true;
+            }
+            else if(weaponMode == 2){
+                Espaco.GetComponent<Espaco>().despawn();
+                Espaco.GetComponent<Espaco>().spawn();
+                GameObject.FindGameObjectWithTag("modo1").GetComponent<Renderer>().enabled = false;
+                GameObject.FindGameObjectWithTag("modo2").GetComponent<Renderer>().enabled = true;
+            }
         }
     }
-
-
-
 
 
 

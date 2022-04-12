@@ -8,6 +8,13 @@ TagManager:
   - portal2
   - rh
   - PlayerOne
+  - forcefield
+  - Enemy
+  - Asteroids
+  - Espaco
+  - modo2
+  - modo1
+  - modo0
   layers:
   - Default
   - TransparentFX
